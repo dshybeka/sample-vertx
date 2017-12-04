@@ -83,12 +83,17 @@ public class PortfolioServiceImpl implements PortfolioService {
 
 
         client.get("?name=" + encode(company))
+                .as(BodyCodec.jsonObject())
                 .send(httpResponseAsyncResult -> {
 
                     if (httpResponseAsyncResult.succeeded()) {
 
-                        HttpResponse<JsonObject> result = httpResponseAsyncResult.result();
-                        Double bid = result.body().getDouble("bid");
+                        Double bid = 0.0;
+                        if (httpResponseAsyncResult.result().statusCode() == 200) {
+
+                            HttpResponse<JsonObject> result = httpResponseAsyncResult.result();
+                            bid = result.body().getDouble("bid");
+                        }
 
                         future.complete(bid * numberOfShares);
                     } else {
