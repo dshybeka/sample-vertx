@@ -31,9 +31,15 @@ public class PortfolioVerticle extends MicroServiceVerticle {
       }
     });
 
-    // TODO
-    //----
+    publishMessageSource("portfolio-events", EVENT_ADDRESS, ar -> {
 
-    //----
+        if(ar.succeeded()) {
+
+            System.out.println("Portfolio events service published");
+        } else {
+
+            ar.cause().printStackTrace();
+        }
+    });
   }
 }
